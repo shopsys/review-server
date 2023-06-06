@@ -1,0 +1,21 @@
+version: "3.4"
+
+services:
+    traefik:
+        image: traefik:2.10
+        restart: always
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./traefik.yml:/etc/traefik/traefik.yml
+            - ./acme.json:/acme.json
+        networks:
+            - traefik-network
+        labels:
+            - traefik.docker.network=github-runner_traefik-network
+
+networks:
+    traefik-network:
+        driver: bridge

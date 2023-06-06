@@ -1,0 +1,25 @@
+entryPoints:
+    http:
+        address: :80
+        http:
+            redirections:
+                entryPoint:
+                    to: https
+                    scheme: https
+    https:
+        address: :443
+        http:
+            tls: {}
+providers:
+    providersThrottleDuration: 2s
+    docker:
+        watch: true
+        network: github-runner_traefik-network
+        exposedByDefault: false
+certificatesResolvers:
+    letsencrypt:
+        acme:
+            email: no-reply@no-reply.com
+            storage: acme.json
+            httpChallenge:
+                entryPoint: http
