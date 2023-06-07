@@ -19,7 +19,7 @@ providers:
 certificatesResolvers:
     letsencrypt:
         acme:
-            email: no-reply@no-reply.com
+            email: no-reply@example.com
             storage: acme.json
             httpChallenge:
                 entryPoint: http
