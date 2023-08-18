@@ -16,6 +16,65 @@ services:
         labels:
             - traefik.docker.network=github-runner_traefik-network
 
+    postgres:
+        image: postgres:12.1-alpine
+        restart: always
+        volumes:
+            - ./var/postgres-data:/var/lib/postgresql/data
+            - ./docker/postgres/postgres.conf:/var/lib/postgresql/data/postgresql.conf
+        environment:
+            - PGDATA=/var/lib/postgresql/data/pgdata
+            - POSTGRES_USER=root
+            - POSTGRES_PASSWORD=root
+            - POSTGRES_DB=shopsys
+        labels:
+            - traefik.enable=false
+        command:
+            - postgres
+            - -c
+            - config_file=/var/lib/postgresql/data/postgresql.conf
+        networks:
+            - default
+
+    redis:
+        image: redis:7.0-alpine
+        restart: always
+        networks:
+            - default
+        labels:
+            - traefik.enable=false
+
+    smtp-server:
+        image: ixdotai/smtp:latest
+        restart: always
+        networks:
+            - default
+        labels:
+            - traefik.enable=false
+
+    elasticsearch:
+        build:
+            context: .
+            dockerfile: docker/elasticsearch/Dockerfile
+        restart: always
+        ulimits:
+            nofile:
+                soft: 65536
+                hard: 65536
+        volumes:
+            - elasticsearch-data:/usr/share/elasticsearch/data
+        environment:
+            - discovery.type=single-node
+        labels:
+            - traefik.enable=false
+        networks:
+            - default
+
+volumes:
+    elasticsearch-data:
+        driver: local
+
+
 networks:
     traefik-network:
         driver: bridge
