@@ -1,6 +1,6 @@
 # Shopsys Review Server
 
-This is manual and config files for running review server of [Shopsys Framework](https://github.com/shopsys/shopsys) using GitHub Runner on own VPS via GitHub Actions.
+This is manual and config files for running review server of [Shopsys Platform](https://github.com/shopsys/shopsys) using GitHub Runner on own VPS via GitHub Actions.
 GitHub has detailed documentation about [self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners).
 
 ## Installation
@@ -24,11 +24,11 @@ Run `docker compose up -d` to start Traefik
 
 ### Run GitHub actions
 Your GitHub runner is now ready and accepts connections from GitHub.
-Config files for GitHub actions can be found in [Shopsys Framework repository](https://www.github.com/shopsys/shopsys) in `.github` directory.
+Config files for GitHub actions can be found in [Shopsys Platform repository](https://www.github.com/shopsys/shopsys) in `.github` directory.
 
 ## Contributing
 Thank you for your contributions to Shopsys Review Server repository.
-Together we are making Shopsys Framework better.
+Together we are making Shopsys Platform better.
 
 Please, check our [Contribution Guide](https://github.com/shopsys/shopsys/blob/master/CONTRIBUTING.md) before contributing.
 
