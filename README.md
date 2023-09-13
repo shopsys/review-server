@@ -22,6 +22,13 @@ Follow these [GitHub docs](https://docs.github.com/en/actions/hosting-your-own-r
 Copy content of `github-runner` directory in this repository to `/home/github-runner` directory on your server
 Run `docker compose up -d` to start Traefik
 
+### Increase Docker address pool
+```bash
+    sudo mkdir -p /etc/docker/
+    sudo mv /home/github-runner/daemon.json /etc/docker/daemon.json
+    sudo service docker restart
+```
+
 ### Run GitHub actions
 Your GitHub runner is now ready and accepts connections from GitHub.
 Config files for GitHub actions can be found in [Shopsys Platform repository](https://www.github.com/shopsys/shopsys) in `.github` directory.
