@@ -16,6 +16,15 @@ services:
         labels:
             - traefik.docker.network=github-runner_traefik-network
 
+    chadburn:
+        image: premoweb/chadburn:latest
+        restart: always
+        command: daemon
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+        networks:
+            - default
+
     postgres:
         image: postgres:12.1-alpine
         restart: always
