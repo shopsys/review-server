@@ -79,10 +79,53 @@ services:
         networks:
             - default
 
+    adminer:
+        image: adminer:latest
+        restart: always
+        labels:
+            - traefik.backend=adminer
+            - traefik.http.routers.adminer.rule=Host(`adminer.odin.shopsys.cloud`)
+            - traefik.http.routers.adminer.entrypoints=http,https
+            - traefik.http.routers.adminer.tls.certresolver=letsencrypt
+            - traefik.http.services.adminer.loadbalancer.server.port=8080
+            - traefik.enable=true
+        networks:
+            - traefik-network
+            - default
+        environment:
+            ADMINER_DEFAULT_SERVER: postgres
+
+    kibana:
+        image: docker.elastic.co/kibana/kibana-oss:7.10.2
+        restart: always
+        labels:
+            - traefik.backend=kibana
+            - traefik.http.routers.kibana.rule=Host(`kibana.odin.shopsys.cloud`)
+            - traefik.http.routers.kibana.entrypoints=http,https
+            - traefik.http.routers.kibana.tls.certresolver=letsencrypt
+            - traefik.http.services.kibana.loadbalancer.server.port=5601
+            - traefik.enable=true
+        networks:
+            - traefik-network
+            - default
+
+    rabbitmq:
+        image: rabbitmq:3.12-management-alpine
+        restart: always
+        labels:
+            - traefik.backend=rabbitmq
+            - traefik.http.routers.rabbitmq.rule=Host(`rabbitmq.odin.shopsys.cloud`)
+            - traefik.http.routers.rabbitmq.entrypoints=http,https
+            - traefik.http.routers.rabbitmq.tls.certresolver=letsencrypt
+            - traefik.http.services.rabbitmq.loadbalancer.server.port=15672
+            - traefik.enable=true
+        networks:
+            - traefik-network
+            - default
+
 volumes:
     elasticsearch-data:
         driver: local
-
 
 networks:
     traefik-network:
