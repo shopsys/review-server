@@ -7,6 +7,7 @@ services:
         ports:
             - "80:80"
             - "443:443"
+            - "8080:8080"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./traefik.yml:/etc/traefik/traefik.yml
@@ -14,19 +15,22 @@ services:
         networks:
             - traefik-network
         labels:
+            - traefik.http.routers.traefik.rule=Host(`monitor.odin.shopsys.cloud`)
+            - traefik.http.services.traefik.loadbalancer.server.port=8080
             - traefik.docker.network=github-runner_traefik-network
 
     chadburn:
-        image: premoweb/chadburn:latest
+        image: premoweb/chadburn:85db4be4
+        user: root
         restart: always
         command: daemon
         volumes:
-            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - /var/run/docker.sock:/var/run/docker.sock:ro,z
         networks:
             - default
 
     postgres:
-        image: postgres:12.1-alpine
+        image: postgres:17.4-alpine
         restart: always
         volumes:
             - ./var/postgres-data:/var/lib/postgresql/data
@@ -36,6 +40,7 @@ services:
             - POSTGRES_USER=root
             - POSTGRES_PASSWORD=root
             - POSTGRES_DB=shopsys
+            - POSTGRES_MAX_CONNECTIONS=200
         labels:
             - traefik.enable=false
         command:
@@ -46,10 +51,10 @@ services:
             - default
 
     redis:
-        image: redis:7.0-alpine
+        image: redis:7.4-alpine
         restart: always
         networks:
-            - default
+          - default
         labels:
             - traefik.enable=false
 
@@ -70,10 +75,16 @@ services:
             nofile:
                 soft: 65536
                 hard: 65536
+        deploy:
+            resources:
+                limits:
+                    memory: 4G
         volumes:
             - elasticsearch-data:/usr/share/elasticsearch/data
         environment:
             - discovery.type=single-node
+            - bootstrap.memory_lock=true
+            - "ES_JAVA_OPTS=-Xms3g -Xmx3g"
         labels:
             - traefik.enable=false
         networks:
@@ -96,7 +107,7 @@ services:
             ADMINER_DEFAULT_SERVER: postgres
 
     kibana:
-        image: docker.elastic.co/kibana/kibana-oss:7.10.2
+        image: docker.elastic.co/kibana/kibana:7.17.2
         restart: always
         labels:
             - traefik.backend=kibana
@@ -110,7 +121,7 @@ services:
             - default
 
     rabbitmq:
-        image: rabbitmq:3.12-management-alpine
+        image: rabbitmq:4.1-management-alpine
         restart: always
         labels:
             - traefik.backend=rabbitmq

@@ -2,6 +2,8 @@ entryPoints:
     http:
         address: :80
         http:
+            middlewares:
+                - test-ipallowlist@file
             redirections:
                 entryPoint:
                     to: https
@@ -9,6 +11,8 @@ entryPoints:
     https:
         address: :443
         http:
+            middlewares:
+                - test-ipallowlist@file
             tls: {}
 providers:
     providersThrottleDuration: 2s
@@ -16,6 +20,8 @@ providers:
         watch: true
         network: github-runner_traefik-network
         exposedByDefault: false
+    file:
+        filename: /etc/traefik/traefik.yml
 certificatesResolvers:
     letsencrypt:
         acme:
@@ -23,3 +29,16 @@ certificatesResolvers:
             storage: acme.json
             httpChallenge:
                 entryPoint: http
+http:
+    middlewares:
+        test-ipallowlist:
+            ipAllowList:
+                sourceRange:
+                    - <add ip ranges here>
+log:
+    level: DEBUG
+accessLog: {}
+
+api:
+    dashboard: true
+    insecure: true
