@@ -30,13 +30,12 @@ services:
             - default
 
     postgres:
-        image: postgres:17.4-alpine
+        image: postgres:18-alpine
         restart: always
         volumes:
-            - ./var/postgres-data:/var/lib/postgresql/data
-            - ./docker/postgres/postgres.conf:/var/lib/postgresql/data/postgresql.conf
+            - ./var/postgres-data:/var/lib/postgresql
+            - ./docker/postgres/postgres.conf:/etc/postgresql/postgresql.conf
         environment:
-            - PGDATA=/var/lib/postgresql/data/pgdata
             - POSTGRES_USER=root
             - POSTGRES_PASSWORD=root
             - POSTGRES_DB=shopsys
