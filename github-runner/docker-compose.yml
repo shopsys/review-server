@@ -45,7 +45,7 @@ services:
         command:
             - postgres
             - -c
-            - config_file=/var/lib/postgresql/data/postgresql.conf
+            - config_file=/etc/postgresql/postgresql.conf
         networks:
             - default
 
