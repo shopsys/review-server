@@ -18,6 +18,31 @@ Follow these [GitHub docs](https://docs.github.com/en/actions/hosting-your-own-r
 ### Run the runner as service
 Follow these [GitHub docs](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/configuring-the-self-hosted-runner-application-as-a-service)
 
+### Add more runners when you also run tests (optional)
+One runner processes one job at a time, there is no setting to make it run several jobs in parallel.
+Jobs are assigned to runners by labels and a runner is only eligible when it has *all* labels listed in `runs-on`.
+
+To prevent tests from delaying deployments of review applications, install separate runners for tests
+and give them a label that the deployment job does not use.
+Install as many of them as you want tests to run in parallel.
+
+```bash
+    TOKEN=<registration token from GitHub>
+    RUNNER_VERSION=<latest version from https://github.com/actions/runner/releases>
+    curl -sL -o /tmp/runner.tar.gz https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+
+    for i in 1 2 3; do
+        mkdir -p ~/actions-runner-test-$i && cd ~/actions-runner-test-$i
+        tar xzf /tmp/runner.tar.gz
+        ./config.sh --url https://github.com/<organization>/<repository> --token "$TOKEN" \
+                    --name <server>-tests-$i --labels tests \
+                    --work _work --unattended
+    done
+```
+
+Install every runner as a service the same way as the first one and target them from the workflow
+by `runs-on: [self-hosted, linux, tests]`.
+
 ### Add Traefik to route requests to correct running application
 Copy content of `github-runner` directory in this repository to `/home/github-runner` directory on your server
 Run `docker compose up -d` to start Traefik
