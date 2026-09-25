@@ -15,8 +15,31 @@ On your server create user e.g. `github-runner` with home directory `/home/githu
 ### Add self-hosted runner in `github-runner` user home directory
 Follow these [GitHub docs](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/adding-self-hosted-runners)
 
+The review workflow picks the runner by the `review-stage` label, so register the runner with `--labels review-stage`.
+
 ### Run the runner as service
 Follow these [GitHub docs](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/configuring-the-self-hosted-runner-application-as-a-service)
+
+### Create directory for review environments
+Review environments are deployed to `/home/github-runner/reviews/<branch-name>` regardless of which runner runs the job,
+so the directory must be writable by the `github-runner` user:
+```bash
+    sudo -u github-runner mkdir -p /home/github-runner/reviews
+```
+Cancelling a review finds its containers by the Docker Compose project name (the escaped branch name),
+so it does not depend on the runner that deployed it either.
+
+### Add more runners to deploy reviews in parallel
+Every runner needs its own directory, e.g. `/home/github-runner/actions-runner-review-2`, its own name, e.g. `review-stage-2`,
+and the `review-stage` label. Repeat the steps above for each of them:
+```bash
+    cd /home/github-runner/actions-runner-review-2
+    ./config.sh --url https://github.com/shopsys/shopsys --token <registration-token> --name review-stage-2 --labels review-stage
+    cp /home/github-runner/actions-runner/.env /home/github-runner/actions-runner/.path .
+    sudo ./svc.sh install github-runner
+    sudo ./svc.sh start
+```
+Copying `.env` and `.path` from the first runner keeps the same `PATH` (e.g. `yq` in `/usr/local/bin`) for all runners.
 
 ### Add Traefik to route requests to correct running application
 Copy content of `github-runner` directory in this repository to `/home/github-runner` directory on your server
