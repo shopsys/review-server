@@ -43,7 +43,7 @@ Files in the `system` directory belong outside the `github-runner` home director
 
 | File                               | Destination                                                                             |
 |------------------------------------|-----------------------------------------------------------------------------------------|
-| `system/sysctl/99-sysctl.conf`     | `/etc/sysctl.d/99-sysctl.conf` (required by Elasticsearch)                              |
+| `system/sysctl/99-sysctl.conf`     | `/etc/sysctl.d/99-sysctl.conf` (required by Elasticsearch and by many containers)       |
 | `system/prometheus/prometheus.yml` | `/etc/prometheus/prometheus.yml` (packages `prometheus` and `prometheus-node-exporter`) |
 | `system/fail2ban/sshd.local`       | `/etc/fail2ban/jail.d/sshd.local`                                                       |
 | `system/iptables/rules.v4`         | `/etc/iptables/rules.v4` (package `iptables-persistent`)                                |
