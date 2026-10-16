@@ -25,10 +25,9 @@ providers:
 certificatesResolvers:
     letsencrypt:
         acme:
-            email: no-reply@example.com
+            email: no-reply@odin.shopsys.cloud
             storage: acme.json
-            httpChallenge:
-                entryPoint: http
+            tlsChallenge: {}
 http:
     middlewares:
         test-ipallowlist:
@@ -36,7 +35,7 @@ http:
                 sourceRange:
                     - <add ip ranges here>
 log:
-    level: DEBUG
+    level: INFO
 accessLog: {}
 
 api:
