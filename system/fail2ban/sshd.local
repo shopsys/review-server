@@ -1,0 +1,9 @@
+[sshd]
+backend     = polling
+journalmatch=
+ignoreip    = 127.0.0.1/8 ::1 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 <vpn-ip>
+enabled     = true
+filter      = sshd
+logpath     = /var/log/auth.log
+action      = nftables-multiport[name=sshd, port="4010", protocol=tcp]
+

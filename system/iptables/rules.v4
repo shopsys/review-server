@@ -1,0 +1,6 @@
+# Only own rules - Docker creates its chains itself on start
+*filter
+:INPUT ACCEPT [0:0]
+-A INPUT ! -s <monitoring-ip>/32 -p tcp -m tcp --dport 9090 -j DROP
+-A INPUT ! -s <monitoring-ip>/32 -p tcp -m tcp --dport 9100 -j DROP
+COMMIT

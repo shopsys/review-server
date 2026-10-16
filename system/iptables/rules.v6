@@ -1,0 +1,4 @@
+# No own rules - Docker creates its chains itself on start
+*filter
+:INPUT ACCEPT [0:0]
+COMMIT
