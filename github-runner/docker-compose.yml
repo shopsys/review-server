@@ -5,7 +5,6 @@ services:
         ports:
             - "80:80"
             - "443:443"
-            - "8080:8080"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./traefik.yml:/etc/traefik/traefik.yml
@@ -13,8 +12,11 @@ services:
         networks:
             - traefik-network
         labels:
+            - traefik.enable=true
             - traefik.http.routers.traefik.rule=Host(`monitor.odin.shopsys.cloud`)
-            - traefik.http.services.traefik.loadbalancer.server.port=8080
+            - traefik.http.routers.traefik.entrypoints=https
+            - traefik.http.routers.traefik.tls.certresolver=letsencrypt
+            - traefik.http.routers.traefik.service=api@internal
             - traefik.docker.network=github-runner_traefik-network
 
     chadburn:
