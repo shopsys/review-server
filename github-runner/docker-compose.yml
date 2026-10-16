@@ -2,6 +2,11 @@ services:
     traefik:
         image: traefik:3.6
         restart: always
+        logging:
+            driver: json-file
+            options:
+                max-size: 100m
+                max-file: "10"
         ports:
             - "80:80"
             - "443:443"
@@ -23,6 +28,11 @@ services:
         image: premoweb/chadburn:85db4be4
         user: root
         restart: always
+        logging:
+            driver: json-file
+            options:
+                max-size: 100m
+                max-file: "10"
         command: daemon
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro,z

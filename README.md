@@ -26,7 +26,10 @@ Follow these [GitHub docs](https://docs.github.com/en/actions/hosting-your-own-r
 Copy content of `github-runner` directory in this repository to `/home/github-runner` directory on your server.
 Run `docker compose up -d` to start Traefik.
 
-### Increase Docker address pool
+### Configure Docker daemon
+
+`daemon.json` increases the Docker address pool and limits container logs to 3 files of 50 MB each.
+The limit applies only to containers created after the Docker daemon restart.
 
 ```bash
     sudo mkdir -p /etc/docker/
